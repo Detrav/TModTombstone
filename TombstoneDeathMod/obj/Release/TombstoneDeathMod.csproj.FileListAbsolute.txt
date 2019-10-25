@@ -1,0 +1,6 @@
+C:\Users\exuvo\Documents\My Games\Terraria\ModLoader\Mod Sources\TModTombstone\TombstoneDeathMod\bin\Release\TombstoneDeathMod.dll
+C:\Users\exuvo\Documents\My Games\Terraria\ModLoader\Mod Sources\TModTombstone\TombstoneDeathMod\bin\Release\TombstoneDeathMod.pdb
+C:\Users\exuvo\Documents\My Games\Terraria\ModLoader\Mod Sources\TModTombstone\TombstoneDeathMod\bin\Release\Terraria.exe
+C:\Users\exuvo\Documents\My Games\Terraria\ModLoader\Mod Sources\TModTombstone\TombstoneDeathMod\obj\Release\TombstoneDeathMod.csproj.CoreCompileInputs.cache
+C:\Users\exuvo\Documents\My Games\Terraria\ModLoader\Mod Sources\TModTombstone\TombstoneDeathMod\obj\Release\TombstoneDeathMod.dll
+C:\Users\exuvo\Documents\My Games\Terraria\ModLoader\Mod Sources\TModTombstone\TombstoneDeathMod\obj\Release\TombstoneDeathMod.pdb

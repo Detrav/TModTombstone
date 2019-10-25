@@ -14,8 +14,6 @@ namespace TombstoneDeathMod
 {
     public class GlobalTombstone : GlobalTile
     {
-        public static Dictionary<string, PlayerDeathInventory> playerDeathInventoryMap = new Dictionary<string, PlayerDeathInventory>();
-
         public override void SetDefaults()
         {
             Main.tileLighted[TileID.Tombstones] = true;
@@ -37,36 +35,10 @@ namespace TombstoneDeathMod
             if (type == TileID.Tombstones) {
                 //Get player id and give him his shit bacK
 
-                //Maybe get closest player?
-                Player[] players = Main.player;
-
                 Player player = Main.player[Main.myPlayer];
 
-                Debug.WriteLine("Player ID: " + Main.myPlayer + " Tried to click on tombstone coordinates: " + i + ", " + j);
-                Debug.WriteLine("Player's Name was " + Main.player[Main.myPlayer].name);
-
-                //Don't need this as apparently we can get myMainPlayer here
-                /*Player closestPlayer = null;
-                float closestPlayerDistance = 0f;
-                foreach (Player player in players)
-                {
-                    if (closestPlayer == null)
-                    {
-                        closestPlayer = player;
-                        closestPlayerDistance = Vector2.Distance(new Vector2(closestPlayer.position.X / 16, closestPlayer.position.Y / 16), new Vector2(i, j));
-                    } else
-                    {
-                        Vector2 comparingPlayerPosition = new Vector2(player.position.X / 16, player.position.Y / 16);
-
-                        float playerDistance = Vector2.Distance(comparingPlayerPosition, new Vector2(i, j));
-
-                        if(playerDistance < closestPlayerDistance)
-                        {
-                            closestPlayerDistance = playerDistance;
-                            closestPlayer = player;
-                        }
-                    }
-                }*/
+                //mod.Logger.Warn("Player ID: " + Main.myPlayer + " Tried to click on tombstone coordinates: " + i + ", " + j);
+                //mod.Logger.Warn("Player's Name was " + player.name);
 
                 //ASUMING i and j are x and y coordinates I can do some stuff
                 //Need to check each tile at + and - 1 because the tile is 2x2, but the projectile will only save a single tile coordinate
@@ -81,14 +53,14 @@ namespace TombstoneDeathMod
                 tombStonePositions[7] = new Vector2(i-1, j+1);
                 tombStonePositions[8] = new Vector2(i-1, j-1);
 
-                //NEED TO GET THIS SOMEHOW OH FUCK GOD
-                string playerName = player.name;
+                TombstonePlayer tStonePlayer = player.GetModPlayer<TombstonePlayer>();
 
+                Dictionary<Vector2, PlayerDeathInventory> playerDeathInventoryMap = tStonePlayer.playerDeathInventoryMap;
                 PlayerDeathInventory playerDeathInventory = null;
 
                 //loop through the 9 tile list
                 for(int pos = 0; pos < tombStonePositions.Length; pos++) {
-                    if (playerDeathInventoryMap.TryGetValue(playerName + "," + tombStonePositions[pos].ToString(), out playerDeathInventory))
+                    if (playerDeathInventoryMap.TryGetValue(tombStonePositions[pos], out playerDeathInventory))
                     {
                         //found the player's death inventory, give it to the player who clicked on it
                         //Player player = Main.player[playerId];
@@ -132,14 +104,10 @@ namespace TombstoneDeathMod
                         }
 
                         //delete existing player inventory at that spot
-                        playerDeathInventoryMap.Remove(playerName + "," + tombStonePositions[pos].ToString());
+                        playerDeathInventoryMap.Remove(tombStonePositions[pos]);
                         WorldGen.KillTile((int)tombStonePositions[pos].X, (int)tombStonePositions[pos].Y);
                         break;
 
-                    }
-                    else
-                    {
-                        //Didn't find it, do nothing?
                     }
                 }
             }

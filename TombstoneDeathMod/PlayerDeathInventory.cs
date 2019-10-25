@@ -26,5 +26,27 @@ namespace TombstoneDeathMod
             deathMiscEquips = dMiscEquips;
             deathMiscDyes = dMiscDye;
         }
+
+        public int getValue()
+        {
+            int value = 0;
+
+            for (int i = 0; i < deathInventory.Length; i++)
+            {
+                value += deathInventory[i].value;
+            }
+
+            for (int i = 0; i < deathArmor.Length; i++)
+            {
+                value += deathArmor[i].value;
+            }
+
+            for (int i = 0; i < deathMiscEquips.Length; i++)
+            {
+                value += deathMiscEquips[i].value;
+            }
+
+            return value;
+        }
     }
 }
