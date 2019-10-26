@@ -45,6 +45,11 @@ namespace TombstoneDeathMod
                         x += 2 * movesX;
 
                         isClearForTombstone = WorldGen.TileEmpty(x, y) && WorldGen.TileEmpty(x, y + 1) && WorldGen.TileEmpty(x, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1);
+
+                        if (!isClearForTombstone)
+                        { // Restore x for next loop
+                            x -= 1 * movesX;
+                        }
                     }
                 }
 
