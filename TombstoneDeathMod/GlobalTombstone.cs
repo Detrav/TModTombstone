@@ -42,20 +42,20 @@ namespace TombstoneDeathMod
 
                 //ASUMING i and j are x and y coordinates I can do some stuff
                 //Need to check each tile at + and - 1 because the tile is 2x2, but the projectile will only save a single tile coordinate
-                Vector2[] tombStonePositions = new Vector2[9];
-                tombStonePositions[0] = new Vector2(i, j);
-                tombStonePositions[1] = new Vector2(i, j+1);
-                tombStonePositions[2] = new Vector2(i, j-1);
-                tombStonePositions[3] = new Vector2(i+1, j);
-                tombStonePositions[4] = new Vector2(i+1, j+1);
-                tombStonePositions[5] = new Vector2(i+1, j-1);
-                tombStonePositions[6] = new Vector2(i-1, j);
-                tombStonePositions[7] = new Vector2(i-1, j+1);
-                tombStonePositions[8] = new Vector2(i-1, j-1);
+                Point[] tombStonePositions = new Point[9];
+                tombStonePositions[0] = new Point(i, j);
+                tombStonePositions[1] = new Point(i, j+1);
+                tombStonePositions[2] = new Point(i, j-1);
+                tombStonePositions[3] = new Point(i+1, j);
+                tombStonePositions[4] = new Point(i+1, j+1);
+                tombStonePositions[5] = new Point(i+1, j-1);
+                tombStonePositions[6] = new Point(i-1, j);
+                tombStonePositions[7] = new Point(i-1, j+1);
+                tombStonePositions[8] = new Point(i-1, j-1);
 
                 TombstonePlayer tStonePlayer = player.GetModPlayer<TombstonePlayer>();
 
-                Dictionary<Vector2, PlayerDeathInventory> playerDeathInventoryMap = tStonePlayer.playerDeathInventoryMap;
+                Dictionary<Point, PlayerDeathInventory> playerDeathInventoryMap = tStonePlayer.playerDeathInventoryMap;
                 PlayerDeathInventory playerDeathInventory = null;
 
                 //loop through the 9 tile list

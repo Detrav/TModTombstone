@@ -54,6 +54,7 @@
     <Compile Include="PlayerDeathInventory.cs" />
     <Compile Include="TombstoneDeathMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TombstoneGlobalProjectile.cs" />
     <Compile Include="TombstonePlayer.cs" />
   </ItemGroup>
   <ItemGroup>

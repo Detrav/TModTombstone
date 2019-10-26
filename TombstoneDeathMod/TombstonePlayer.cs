@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -14,65 +15,142 @@ namespace TombstoneDeathMod
 {
     public class TombstonePlayer : ModPlayer
     {
-        public Dictionary<Vector2, PlayerDeathInventory> playerDeathInventoryMap;
+        public Dictionary<Point, PlayerDeathInventory> playerDeathInventoryMap;
         int loadedValue;
 
         public override void Initialize()
         {
-            playerDeathInventoryMap = new Dictionary<Vector2, PlayerDeathInventory>();
+            playerDeathInventoryMap = new Dictionary<Point, PlayerDeathInventory>();
+        }
+
+        // TT 24
+        // CT 13
+        // GG 56
+        private Boolean isTileCoordinateClear(int x, int y)
+        {
+            Tile t1 = Main.tile[x, y];
+            Tile t2 = Main.tile[x, y - 1];
+            Tile t3 = Main.tile[x + 1, y];
+            Tile t4 = Main.tile[x + 1 , y - 1];
+            Tile t5 = Main.tile[x, y + 1];
+            Tile t6 = Main.tile[x + 1, y + 1];
+
+            Boolean belowClearOrGround = (WorldGen.TileEmpty(x, y + 1) || t5.active() && Main.tileSolid[t5.type] && !t5.halfBrick() && t5.slope() == 0 && !Main.tileNoAttach[t5.type])
+                                      && (WorldGen.TileEmpty(x + 1, y + 1) || t6.active() && Main.tileSolid[t6.type] && !t6.halfBrick() && t6.slope() == 0 && !Main.tileNoAttach[t6.type]);
+
+            Boolean clear = WorldGen.TileEmpty(x, y) && WorldGen.TileEmpty(x, y - 1) && WorldGen.TileEmpty(x + 1, y) && WorldGen.TileEmpty(x + 1, y - 1)
+                && belowClearOrGround;
+
+            Boolean mostlyClear = (WorldGen.TileEmpty(x, y) || (t1.active() && Main.tileCut[t1.type]))
+                && (WorldGen.TileEmpty(x, y - 1) || (t2.active() && Main.tileCut[t2.type]))
+                && (WorldGen.TileEmpty(x + 1, y) || (t3.active() && Main.tileCut[t3.type]))
+                && (WorldGen.TileEmpty(x + 1, y - 1) || (t4.active() && Main.tileCut[t4.type]))
+                && belowClearOrGround;
+
+            //Main.NewText("test X " + x + ", Y " + y + ", clear=" + clear + ", mostlyClear=" + mostlyClear);
+
+            if (mostlyClear)
+            {
+                // Remove grass
+                if (Main.tile[x, y].active())
+                {
+                    WorldGen.KillTile(x, y, false, false, false);
+                }
+                if (Main.tile[x, y - 1].active())
+                {
+                    WorldGen.KillTile(x, y - 1, false, false, false);
+                }
+                if (Main.tile[x + 1, y].active())
+                {
+                    WorldGen.KillTile(x + 1, y, false, false, false);
+                }
+                if (Main.tile[x + 1, y - 1].active())
+                {
+                    WorldGen.KillTile(x + 1, y - 1, false, false, false);
+                }
+            }
+
+            if (clear || mostlyClear)
+            {
+                // Create dirt below
+                if (WorldGen.TileEmpty(x, y + 1))
+                {
+                    Main.tile[x, y + 1].active(true);
+                }
+                if (WorldGen.TileEmpty(x + 1, y + 1))
+                {
+                    Main.tile[x + 1, y + 1].active(true);
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
-            int x = (int)((player.position.X) / 16f);
-            int y = (int)((player.position.Y) / 16f) + 2;
+            Point playerPosition = player.position.ToTileCoordinates();
+            int x = playerPosition.X;
+            int y = playerPosition.Y + 4;
+            int startX = x;
 
-            bool isClearForTombstone = WorldGen.TileEmpty(x, y) && WorldGen.TileEmpty(x, y + 1) && WorldGen.TileEmpty(x, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1);
+            bool isClearForTombstone = isTileCoordinateClear(x, y);
 
-            // Check left 10 squares, then right 10 squares, then up one and repeat 20 times
+            // Check left and right 15 squares, then up one and repeat 15 times
             int movesY = 0;
-            while (!isClearForTombstone && movesY++ < 20) {
+            while (!isClearForTombstone && movesY++ < 15) {
+
+                x = startX;
+                isClearForTombstone = isTileCoordinateClear(x, y);
 
                 int movesX = 0;
-                while (!isClearForTombstone && movesX++ < 10)
+                while (!isClearForTombstone && movesX++ < 15)
                 {
-                    x -= 1 * movesX;
+                    x = startX - movesX;
 
-                    isClearForTombstone = WorldGen.TileEmpty(x, y) && WorldGen.TileEmpty(x, y + 1) && WorldGen.TileEmpty(x, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1);
+                    if (x < 0)
+                    {
+                        x = 0;
+                    }
+                    
+                    isClearForTombstone = isTileCoordinateClear(x, y);
 
                     if (!isClearForTombstone)
                     {
-                        x += 2 * movesX;
+                        x = startX + movesX;
 
-                        isClearForTombstone = WorldGen.TileEmpty(x, y) && WorldGen.TileEmpty(x, y + 1) && WorldGen.TileEmpty(x, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1) && WorldGen.TileEmpty(x + 1, y - 1);
-
-                        if (!isClearForTombstone)
-                        { // Restore x for next loop
-                            x -= 1 * movesX;
+                        if (x > Main.maxTilesX)
+                        {
+                            x = Main.maxTilesX - 1;
                         }
+
+                        isClearForTombstone = isTileCoordinateClear(x, y);
                     }
                 }
 
                 if (!isClearForTombstone)
                 {
                     y--;
+
+                    if (y < 0)
+                    {
+                        y = 0;
+                    }
                 }
             }
 
             if (!isClearForTombstone)
             {
                 // Revert to normal death
-                Main.NewText("Unable to place tombstone. Reverting to normal death.", 255, 100, 100);
+                Main.NewText("Unable to place tombstone1. Reverting to normal death.", 255, 100, 100);
                 return true;
             }
-
-            Main.tile[x, y + 1].active(true);
-            Main.tile[x + 1, y + 1].active(true);
             
             if (!WorldGen.PlaceTile(x, y, TileID.Tombstones, false, true, 1, 7))
             {
                 // Revert to normal death
-                Main.NewText("Unable to place tombstone. Reverting to normal death.", 255, 100, 100);
+                Main.NewText("Unable to place tombstone2. Reverting to normal death.", 255, 100, 100);
                 return true;
             }
 
@@ -82,7 +160,7 @@ namespace TombstoneDeathMod
                 Sign.TextSign(sign, player.name + "'s Stuff");
             }
 
-            Vector2 tombStonePosition = new Vector2(x, y);
+            Point tombStonePosition = new Point(x, y);
 
             PlayerDeathInventory previousInventory = null;
 
@@ -169,7 +247,7 @@ namespace TombstoneDeathMod
 
             playerDeathInventoryMap.Add(tombStonePosition, playerDeathInventory);
 
-            Main.NewText("Tombstone inventory saved at X " + x + ", Y " + y);
+            Main.NewText("Inventory saved in tombstone at " + pointToText(tombStonePosition));
 
             return true;
         }
@@ -177,10 +255,10 @@ namespace TombstoneDeathMod
         public override TagCompound Save()
         {
             int maxValue = 0;
-            Vector2 position = new Vector2();
+            Point position = new Point();
             PlayerDeathInventory mostValuableDeath = null;
 
-            foreach (KeyValuePair<Vector2, PlayerDeathInventory> entry in playerDeathInventoryMap)
+            foreach (KeyValuePair<Point, PlayerDeathInventory> entry in playerDeathInventoryMap)
             {
                 int value = entry.Value.getValue();
                 if (value > maxValue)
@@ -197,7 +275,7 @@ namespace TombstoneDeathMod
                 return null;
             }
 
-            mod.Logger.Warn("Saving tombstone inventory at " + position.X + ", " + position.Y + ", valued at " + maxValue);
+            mod.Logger.Info("Saving inventory in tombstone at " + position.X + ", " + position.Y + ", valued at " + maxValue);
 
             List<Item> deathInventory = new List<Item>(mostValuableDeath.deathInventory);
             List<Item> deathArmor = new List<Item>(mostValuableDeath.deathArmor);
@@ -246,7 +324,7 @@ namespace TombstoneDeathMod
 
                 loadedValue = value;
 
-                Vector2 position = new Vector2(tag.GetFloat("x"), tag.GetFloat("y"));
+                Point position = new Point(tag.GetInt("x"), tag.GetInt("y"));
 
                 Item[] deathInventory = new Item[player.inventory.Length];
                 Item[] deathArmor = new Item[player.armor.Length];
@@ -270,10 +348,10 @@ namespace TombstoneDeathMod
         {
             if (playerDeathInventoryMap.Count > 0)
             {
-                foreach(KeyValuePair<Vector2, PlayerDeathInventory> entry in playerDeathInventoryMap)
+                foreach(KeyValuePair<Point, PlayerDeathInventory> entry in playerDeathInventoryMap)
                 {
                     PlayerDeathInventory inventory = entry.Value;
-                    Main.NewText("Loaded tombstone inventory " + entry.Key + ", valued " + loadedValue, 155, 155, 255);
+                    Main.NewText("Loaded inventory in tombstone at " + pointToText(entry.Key) + ", valued " + Main.ValueToCoins(loadedValue), 155, 155, 255);
                 }
                 
             }
@@ -293,6 +371,66 @@ namespace TombstoneDeathMod
                     inventory[i] = items[i];
                 }
             }
+        }
+
+        private string pointToText(Point point)
+        {
+            Vector2 worldCords = point.ToWorldCoordinates();
+
+            string xText = "";
+            int x = (int)((worldCords.X + (float)(Main.player[Main.myPlayer].width / 2)) * 2f / 16f - (float)Main.maxTilesX);
+
+            if (x > 0)
+            {
+                xText += Language.GetTextValue("GameUI.ComassEast", x);
+            }
+            else if (x < 0)
+            {
+                xText += Language.GetTextValue("GameUI.CompassWest", -x);
+            }
+            else
+            {
+                xText += Language.GetTextValue("GameUI.CompassCenter");
+            }
+
+            int y = (int)((double)((worldCords.Y + (float)Main.player[Main.myPlayer].height) * 2f / 16f) - Main.worldSurface * 2.0);
+            float num23 = (float)(Main.maxTilesX / 4200);
+            num23 *= num23;
+            int num24 = 1200;
+            float num25 = (float)((double)((Main.screenPosition.Y + (float)(Main.screenHeight / 2)) / 16f - (65f + 10f * num23)) / (Main.worldSurface / 5.0));
+            string layer;
+            if (Main.player[Main.myPlayer].position.Y > (float)((Main.maxTilesY - 204) * 16))
+            {
+                layer = Language.GetTextValue("GameUI.LayerUnderworld");
+            }
+            else if ((double)worldCords.Y > Main.rockLayer * 16.0 + (double)(num24 / 2) + 16.0)
+            {
+                layer = Language.GetTextValue("GameUI.LayerCaverns");
+            }
+            else if (y > 0)
+            {
+                layer = Language.GetTextValue("GameUI.LayerUnderground");
+            }
+            else if (num25 >= 1f)
+            {
+                layer = Language.GetTextValue("GameUI.LayerSurface");
+            }
+            else
+            {
+                layer = Language.GetTextValue("GameUI.LayerSpace");
+            }
+            y = Math.Abs(y);
+            string depth;
+            if (y == 0)
+            {
+                depth = Language.GetTextValue("GameUI.DepthLevel");
+            }
+            else
+            {
+                depth = Language.GetTextValue("GameUI.Depth", y);
+            }
+
+            return xText + " " + depth + " " + layer;
         }
 
     }
