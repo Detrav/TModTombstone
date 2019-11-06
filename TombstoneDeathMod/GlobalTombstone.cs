@@ -30,6 +30,7 @@ namespace TombstoneDeathMod
             }
         }
 
+        //TODO network sync removed gravestone
         public override void RightClick(int i, int j, int type)
         {
             if (type == TileID.Tombstones) {

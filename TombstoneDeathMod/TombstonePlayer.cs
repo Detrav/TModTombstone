@@ -88,6 +88,7 @@ namespace TombstoneDeathMod
             return false;
         }
 
+        //Handle other prekills returning false
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             Point playerPosition = player.position.ToTileCoordinates();
@@ -318,30 +319,38 @@ namespace TombstoneDeathMod
 
         public override void Load(TagCompound tag)
         {
-            int value = tag.GetInt("value");
+           try
+            {
+                int value = tag.GetInt("value");
 
-            if (value > 0) {
+                if (value > 0)
+                {
 
-                loadedValue = value;
+                    loadedValue = value;
 
-                Point position = new Point(tag.GetInt("x"), tag.GetInt("y"));
+                    Point position = new Point(tag.GetInt("x"), tag.GetInt("y"));
 
-                Item[] deathInventory = new Item[player.inventory.Length];
-                Item[] deathArmor = new Item[player.armor.Length];
-                Item[] deathDye = new Item[player.dye.Length];
-                Item[] deathMiscEquips = new Item[player.miscEquips.Length];
-                Item[] deathMiscDyes = new Item[player.miscDyes.Length];
+                    Item[] deathInventory = new Item[player.inventory.Length];
+                    Item[] deathArmor = new Item[player.armor.Length];
+                    Item[] deathDye = new Item[player.dye.Length];
+                    Item[] deathMiscEquips = new Item[player.miscEquips.Length];
+                    Item[] deathMiscDyes = new Item[player.miscDyes.Length];
 
-                loadItemList(tag.Get<List<Item>>("deathInventory"), deathInventory);
-                loadItemList(tag.Get<List<Item>>("deathArmor"), deathArmor);
-                loadItemList(tag.Get<List<Item>>("deathDye"), deathDye);
-                loadItemList(tag.Get<List<Item>>("deathMiscEquips"), deathMiscEquips);
-                loadItemList(tag.Get<List<Item>>("deathMiscDyes"), deathMiscDyes);
+                    loadItemList(tag.Get<List<Item>>("deathInventory"), deathInventory);
+                    loadItemList(tag.Get<List<Item>>("deathArmor"), deathArmor);
+                    loadItemList(tag.Get<List<Item>>("deathDye"), deathDye);
+                    loadItemList(tag.Get<List<Item>>("deathMiscEquips"), deathMiscEquips);
+                    loadItemList(tag.Get<List<Item>>("deathMiscDyes"), deathMiscDyes);
 
-                PlayerDeathInventory inventory = new PlayerDeathInventory(deathInventory, deathArmor, deathDye, deathMiscEquips, deathMiscDyes);
+                    PlayerDeathInventory inventory = new PlayerDeathInventory(deathInventory, deathArmor, deathDye, deathMiscEquips, deathMiscDyes);
 
-                playerDeathInventoryMap.Add(position, inventory);
-             }
+                    playerDeathInventoryMap.Add(position, inventory);
+                }
+            }
+            catch (Exception e)
+            {
+                mod.Logger.Error("Error loading saved tombstone inventory " + e.Message);
+            }
         }
 
         public override void OnEnterWorld(Player player)
@@ -382,7 +391,7 @@ namespace TombstoneDeathMod
 
             if (x > 0)
             {
-                xText += Language.GetTextValue("GameUI.ComassEast", x);
+                xText += Language.GetTextValue("GameUI.CompassEast", x);
             }
             else if (x < 0)
             {
