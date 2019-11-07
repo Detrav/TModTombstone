@@ -9,6 +9,8 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using System.IO;
+using Terraria.Localization;
 
 namespace TombstoneDeathMod
 {
@@ -38,8 +40,7 @@ namespace TombstoneDeathMod
 
                 Player player = Main.player[Main.myPlayer];
 
-                //mod.Logger.Warn("Player ID: " + Main.myPlayer + " Tried to click on tombstone coordinates: " + i + ", " + j);
-                //mod.Logger.Warn("Player's Name was " + player.name);
+                //mod.Logger.Warn("Player ID: " + Main.myPlayer + " " + player.name + " Tried to click on tombstone coordinates: " + i + ", " + j);
 
                 //ASUMING i and j are x and y coordinates I can do some stuff
                 //Need to check each tile at + and - 1 because the tile is 2x2, but the projectile will only save a single tile coordinate
@@ -106,12 +107,33 @@ namespace TombstoneDeathMod
 
                         //delete existing player inventory at that spot
                         playerDeathInventoryMap.Remove(tombStonePositions[pos]);
-                        WorldGen.KillTile((int)tombStonePositions[pos].X, (int)tombStonePositions[pos].Y);
-                        break;
 
+                        WorldGen.KillTile(tombStonePositions[pos].X, tombStonePositions[pos].Y);
+
+                        if (Main.netMode != NetmodeID.SinglePlayer) {
+                            //TombstoneDeathMod myMod = (TombstoneDeathMod) mod;
+                            //myMod.Send(-1, Main.myPlayer, tombStonePositions[pos].X, tombStonePositions[pos].Y);
+                            Send(-1, Main.myPlayer, tombStonePositions[pos].X, tombStonePositions[pos].Y);
+                        }
+                        
+                        break;
                     }
                 }
             }
+        }
+
+        public void Send(int toWho, int fromWho, int x, int y)
+        {
+            //Main.NewText("Local player sending remove tombstone", 255, 100, 100);
+
+            ModPacket packet = mod.GetPacket();
+            if (Main.netMode == NetmodeID.Server)
+            {
+                packet.Write(fromWho);
+            }
+            packet.Write(x);
+            packet.Write(y);
+            packet.Send(toWho, fromWho);
         }
     }
 }

@@ -88,7 +88,6 @@ namespace TombstoneDeathMod
             return false;
         }
 
-        //Handle other prekills returning false
         public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
         {
             Point playerPosition = player.position.ToTileCoordinates();
