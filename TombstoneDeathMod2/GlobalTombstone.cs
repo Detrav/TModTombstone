@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria.Localization;
 
-namespace TombstoneDeathMod
+namespace TombstoneDeathMod2
 {
     public class GlobalTombstone : GlobalTile
     {

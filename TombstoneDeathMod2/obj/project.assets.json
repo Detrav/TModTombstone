@@ -16,11 +16,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod\\TombstoneDeathMod.csproj",
-      "projectName": "TombstoneDeathMod",
-      "projectPath": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod\\TombstoneDeathMod.csproj",
+      "projectUniqueName": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod2\\TombstoneDeathMod2.csproj",
+      "projectName": "TombstoneDeathMod2",
+      "projectPath": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod2\\TombstoneDeathMod2.csproj",
       "packagesPath": "C:\\Users\\exuvo\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod\\obj\\",
+      "outputPath": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\exuvo\\AppData\\Roaming\\NuGet\\NuGet.Config",

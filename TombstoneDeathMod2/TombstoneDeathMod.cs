@@ -10,7 +10,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace TombstoneDeathMod
+namespace TombstoneDeathMod2
 {
     public class TombstoneDeathMod: Terraria.ModLoader.Mod
     {

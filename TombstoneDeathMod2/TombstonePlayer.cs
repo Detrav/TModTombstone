@@ -11,7 +11,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace TombstoneDeathMod
+namespace TombstoneDeathMod2
 {
     public class TombstonePlayer : ModPlayer
     {

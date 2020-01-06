@@ -8,7 +8,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace TombstoneDeathMod
+namespace TombstoneDeathMod2
 {
     public class PlayerDeathInventory
     {
