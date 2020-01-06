@@ -1,0 +1,46 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.5": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.5": []
+  },
+  "packageFolders": {
+    "C:\\Users\\exuvo\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
+    "restore": {
+      "projectUniqueName": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod\\TombstoneDeathMod.csproj",
+      "projectName": "TombstoneDeathMod",
+      "projectPath": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod\\TombstoneDeathMod.csproj",
+      "packagesPath": "C:\\Users\\exuvo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\exuvo\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\TombstoneDeathMod\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\exuvo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net45"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net45": {
+          "projectReferences": {}
+        }
+      }
+    },
+    "frameworks": {
+      "net45": {}
+    }
+  }
+}
