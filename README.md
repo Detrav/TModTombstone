@@ -11,4 +11,4 @@ A message is printed on world join if a saved tomb stone was loaded with its pos
 
 
 Know issues:
-Still creates gravestone when player has item that prevents dying. Can not fix. Workaround: Quickly click on the tombstone when death was prevented.
+Creates gravestone when player has item that prevents dying. Can not fix. Workaround: Quickly click on the tombstone when death was prevented.
