@@ -88,7 +88,12 @@ namespace TombstoneDeathMod2
             return false;
         }
 
-        public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        //public override bool PreKill(double damage, int hitDirection, bool pvp, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+        //{
+            
+        //}
+
+        public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
         {
             Point playerPosition = player.position.ToTileCoordinates();
             int x = playerPosition.X;
@@ -99,7 +104,8 @@ namespace TombstoneDeathMod2
 
             // Check left and right 15 squares, then up one and repeat 15 times
             int movesY = 0;
-            while (!isClearForTombstone && movesY++ < 15) {
+            while (!isClearForTombstone && movesY++ < 15)
+            {
 
                 x = startX;
                 isClearForTombstone = isTileCoordinateClear(x, y);
@@ -113,7 +119,7 @@ namespace TombstoneDeathMod2
                     {
                         x = 0;
                     }
-                    
+
                     isClearForTombstone = isTileCoordinateClear(x, y);
 
                     if (!isClearForTombstone)
@@ -144,14 +150,16 @@ namespace TombstoneDeathMod2
             {
                 // Revert to normal death
                 Main.NewText("Unable to place tombstone1. Reverting to normal death.", 255, 100, 100);
-                return true;
+                base.Kill(damage, hitDirection, pvp, damageSource);
+                return;
             }
-            
+
             if (!WorldGen.PlaceTile(x, y, TileID.Tombstones, false, true, 1, 7))
             {
                 // Revert to normal death
                 Main.NewText("Unable to place tombstone2. Reverting to normal death.", 255, 100, 100);
-                return true;
+                base.Kill(damage, hitDirection, pvp, damageSource);
+                return;
             }
 
             int sign = Sign.ReadSign(x, y, true);
@@ -189,7 +197,8 @@ namespace TombstoneDeathMod2
                 if (newItemValue < oldItemValue)
                 {
                     Main.NewText("Previous more valuable death at same position, not overwriting. Reverting to normal death.", 255, 100, 100);
-                    return true;
+                    base.Kill(damage, hitDirection, pvp, damageSource);
+                    return;
                 }
 
                 Main.NewText("Previous less valuable death at same position, overwriting.", 255, 100, 100);
@@ -249,7 +258,7 @@ namespace TombstoneDeathMod2
 
             Main.NewText("Inventory saved in tombstone at " + pointToText(tombStonePosition));
 
-            return true;
+            base.Kill(damage, hitDirection, pvp, damageSource);
         }
 
         public override TagCompound Save()
